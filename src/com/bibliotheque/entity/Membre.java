@@ -1,3 +1,5 @@
+package com.bibliotheque.entity;
+
 public class Membre {
     private Integer memberNémuro;
     private String memberNom;
