@@ -5,14 +5,7 @@ public class Livre {
     private String ISBN;
     private String titre;
     private String auteur;
-
     private Statut statut;
-
-    public enum Statut {
-        PÉRDU,
-        DISPONIBLE,
-        EMPRUNTER,
-    }
 
     public Livre() {
     }
@@ -47,11 +40,18 @@ public class Livre {
     public void setAuteur(String auteur) {
         this.auteur = auteur;
     }
+
     public Statut getStatut() {
         return statut;
     }
 
     public void setStatut(Statut statut) {
         this.statut = statut;
+    }
+
+    public enum Statut {
+        PÉRDU,
+        DISPONIBLE,
+        EMPRUNTER,
     }
 }

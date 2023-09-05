@@ -5,13 +5,14 @@ import com.bibliotheque.entity.Livre;
 import com.bibliotheque.util.DbConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LivreDaoImpl implements LivreDao {
-    Connection connection;
+    Connection connection = DbConnection.createDbConnection();
 
     @Override
     public void ajouterLivre(Livre livre) {
-        connection = DbConnection.createDbConnection();
         String query = "INSERT INTO Livre VALUES (?,?,?,?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -35,21 +36,20 @@ public class LivreDaoImpl implements LivreDao {
 
     @Override
     public void afficherLivre() {
-        connection = DbConnection.createDbConnection();
         String query = "SELECT * FROM Livre WHERE statut = 'DISPONIBLE'";
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            System.out.println("-------------------------------------------------------");
-            System.out.printf("| %-10s | %-20s | %-15s |\n", "ISBN", "Titre", "Auteur");
-            System.out.println("-------------------------------------------------------");
+            System.out.println("------------------------------------------------------------");
+            System.out.printf("| %-10s | %-20s | %-20s |\n", "ISBN", "Titre", "Auteur");
+            System.out.println("------------------------------------------------------------");
             while (resultSet.next()) {
-                System.out.printf("| %-10s | %-20s | %-15s |\n",
+                System.out.printf("| %-10s | %-20s | %-20s |\n",
                         resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3));
             }
-            System.out.println("-------------------------------------------------------");
+            System.out.println("------------------------------------------------------------");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,36 +57,81 @@ public class LivreDaoImpl implements LivreDao {
     }
 
     @Override
-    public void afficherLivreISBN(String isbn) {
-        connection = DbConnection.createDbConnection();
+    public Livre afficherLivreISBN(String isbn) {
         String query = "SELECT * FROM Livre WHERE isbn = ?";
+        Livre livre = new Livre();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, isbn);
             ResultSet resultSet = preparedStatement.executeQuery();
             System.out.println("-------------------------------------------------------");
-            System.out.printf("| %-10s | %-20s | %-15s |\n", "ISBN", "Titre", "Auteur");
+            System.out.printf("| %-10s | %-20s | %-20s |\n", "ISBN", "Titre", "Auteur");
             System.out.println("-------------------------------------------------------");
-            if (!resultSet.next()) {
-                System.out.println("il n'y a pas de livre ajouté");
+            if (resultSet.next()) {
+                System.out.printf("| %-10s | %-20s | %-20s |\n",
+                        resultSet.getString(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3));
             } else {
-                while (resultSet.next()) {
-                    System.out.printf("| %-10s | %-20s | %-15s |\n",
-                            resultSet.getString(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3));
-                }
+                System.out.println("il n'y a pas de livre avec cette isbn");
             }
             System.out.println("-------------------------------------------------------");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Livre afficherLivreparISBN(String isbn) {
+        String query = "SELECT * FROM Livre WHERE isbn = ?";
+        Livre livre = new Livre();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, isbn);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                livre.setISBN(resultSet.getString("isbn"));
+                livre.setTitre(resultSet.getString("titre"));
+                livre.setAuteur(resultSet.getString("auteur"));
+                return livre;
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
     @Override
+    public List<Livre> chercherLivre(String titre) {
+        String query = "SELECT * FROM Livre WHERE titre LIKE ? OR auteur LIKE ?;";
+        List<Livre> livres = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, "%" + titre + "%");
+            preparedStatement.setString(2, "%" + titre + "%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Livre livre = new Livre();
+                livre.setISBN(resultSet.getString("isbn"));
+                livre.setTitre(resultSet.getString("titre"));
+                livre.setAuteur(resultSet.getString("auteur"));
+                livres.add(livre);
+            }
+            return livres;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    @Override
     public void supprimerLivre(String isbn) {
-        connection = DbConnection.createDbConnection();
         String query = "DELETE FROM Livre WHERE isbn = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -102,10 +147,7 @@ public class LivreDaoImpl implements LivreDao {
 
     @Override
     public void modifierLivre(Livre livre) {
-        connection = DbConnection.createDbConnection();
-        // String query = "UPDATE Livre SET isbn = ?, titre = ?, auteur = ?, status =
-        // ?";
-        String query = "UPDATE Livre SET titre = ?, auteur = ?, status = ? WHERE isbn = ?";
+        String query = "UPDATE Livre SET titre = ?, auteur = ?, statut = ? WHERE isbn = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, livre.getTitre());
