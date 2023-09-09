@@ -12,7 +12,7 @@ public class LivreDaoImpl implements LivreDao {
     Connection connection = DbConnection.createDbConnection();
 
     @Override
-    public void ajouterLivre(Livre livre) {
+    public Livre ajouterLivre(Livre livre) {
         String query = "INSERT INTO Livre VALUES (?,?,?,?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -23,59 +23,51 @@ public class LivreDaoImpl implements LivreDao {
             Integer result = preparedStatement.executeUpdate();
             preparedStatement.close();
             if (result != 0)
-                System.out.println("Livre A été Bien Ajouter");
+                return livre;
         } catch (SQLException e) {
-            if (e.getSQLState().equals("23505")) {
-                // 23505 is the SQLState for a unique constraint violation
-                System.out.println("ISBN déjà utilisé");
-            } else {
-                e.printStackTrace(); // Handle other SQL exceptions
-            }
+            e.printStackTrace();
         }
+        return null;
     }
 
     @Override
-    public void afficherLivre() {
+    public List<Livre> afficherLivre() {
         String query = "SELECT * FROM Livre WHERE statut = 'DISPONIBLE'";
+        List<Livre> livres = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            System.out.println("------------------------------------------------------------");
-            System.out.printf("| %-10s | %-20s | %-20s |\n", "ISBN", "Titre", "Auteur");
-            System.out.println("------------------------------------------------------------");
             while (resultSet.next()) {
-                System.out.printf("| %-10s | %-20s | %-20s |\n",
-                        resultSet.getString(1),
-                        resultSet.getString(2),
-                        resultSet.getString(3));
+                Livre livre = new Livre();
+                livre.setISBN(resultSet.getString("isbn"));
+                livre.setTitre(resultSet.getString("titre"));
+                livre.setAuteur(resultSet.getString("auteur"));
+                livres.add(livre);
             }
-            System.out.println("------------------------------------------------------------");
+            return livres;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
-    public Livre afficherLivreISBN(String isbn) {
-        String query = "SELECT * FROM Livre WHERE isbn = ?";
-        Livre livre = new Livre();
+    public List<Livre> afficherLivreEmprunter() {
+        String query = "SELECT * FROM Livre WHERE statut = 'EMPRUNTER'";
+        List<Livre> livres = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, isbn);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            System.out.println("-------------------------------------------------------");
-            System.out.printf("| %-10s | %-20s | %-20s |\n", "ISBN", "Titre", "Auteur");
-            System.out.println("-------------------------------------------------------");
-            if (resultSet.next()) {
-                System.out.printf("| %-10s | %-20s | %-20s |\n",
-                        resultSet.getString(1),
-                        resultSet.getString(2),
-                        resultSet.getString(3));
-            } else {
-                System.out.println("il n'y a pas de livre avec cette isbn");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                Livre livre = new Livre();
+                livre.setISBN(resultSet.getString("isbn"));
+                livre.setTitre(resultSet.getString("titre"));
+                livre.setAuteur(resultSet.getString("auteur"));
+                livres.add(livre);
             }
-            System.out.println("-------------------------------------------------------");
+            return livres;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -96,11 +88,9 @@ public class LivreDaoImpl implements LivreDao {
                 livre.setAuteur(resultSet.getString("auteur"));
                 return livre;
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -129,9 +119,8 @@ public class LivreDaoImpl implements LivreDao {
         return null;
     }
 
-
     @Override
-    public void supprimerLivre(String isbn) {
+    public Boolean supprimerLivre(String isbn) {
         String query = "DELETE FROM Livre WHERE isbn = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -139,14 +128,15 @@ public class LivreDaoImpl implements LivreDao {
             Integer result = preparedStatement.executeUpdate();
             preparedStatement.close();
             if (result != 0)
-                System.out.println("Livre A été Bien Supprimer");
+                return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
-    public void modifierLivre(Livre livre) {
+    public Livre modifierLivre(Livre livre) {
         String query = "UPDATE Livre SET titre = ?, auteur = ?, statut = ? WHERE isbn = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -157,9 +147,10 @@ public class LivreDaoImpl implements LivreDao {
             Integer result = preparedStatement.executeUpdate();
             preparedStatement.close();
             if (result != 0)
-                System.out.println("Livre A été Bien Modifier");
+                return livre;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }

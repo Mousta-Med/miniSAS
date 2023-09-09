@@ -54,7 +54,7 @@ public class Main {
                     livreController.supprimerLivre();
                     break;
                 case 4:
-                    livreDao.afficherLivre();
+                    livreController.afficherLivre(4);
                     break;
                 case 5:
                     livreController.chercherLivre();
@@ -74,6 +74,7 @@ public class Main {
                 case 10:
                     break;
                 case 11:
+                    livreController.afficherLivre(11);
                     break;
                 case 12:
                     break;

@@ -5,18 +5,18 @@ import com.bibliotheque.entity.Livre;
 import java.util.List;
 
 public interface LivreDao {
-    public void ajouterLivre(Livre livre);
+    public Livre ajouterLivre(Livre livre);
 
-    public void afficherLivre();
+    public List<Livre> afficherLivre();
 
-    public Livre afficherLivreISBN(String isbn);
+    public List<Livre> afficherLivreEmprunter();
 
     public Livre afficherLivreparISBN(String isbn);
 
     public List<Livre> chercherLivre(String isbn);
 
-    public void supprimerLivre(String isbn);
+    public Boolean supprimerLivre(String isbn);
 
-    public void modifierLivre(Livre livre);
+    public Livre modifierLivre(Livre livre);
 
 }

@@ -16,7 +16,7 @@ public class LivreController {
     Scanner scanner = new Scanner(System.in);
     LivreDao livreDao = new LivreDaoImpl();
 
-    public void ajouterLivre(){
+    public void ajouterLivre() {
         System.out.println("Entrer ISBN De Livre:");
         String isbn = scanner.next();
         scanner.nextLine();
@@ -28,7 +28,35 @@ public class LivreController {
         livre.setTitre(titre);
         livre.setAuteur(auteur);
         livre.setStatut(Livre.Statut.DISPONIBLE);
-        livreDao.ajouterLivre(livre);
+        ;
+        if (livreDao.ajouterLivre(livre) != null) {
+            System.out.println("Livre A été Bien Ajouter");
+        } else {
+            System.out.println("Livre ne pas Bien Ajouter");
+        }
+    }
+
+    public void afficherLivre(Integer integer) {
+        List<Livre> result;
+        if (integer == 4) {
+            result = livreDao.afficherLivre();
+        } else {
+            result = livreDao.afficherLivreEmprunter();
+        }
+        System.out.println("-------------------------------------------------------");
+        System.out.printf("| %-10s | %-20s | %-15s |\n", "ISBN", "Titre", "Auteur");
+        System.out.println("-------------------------------------------------------");
+        if (!result.isEmpty()) {
+            for (Livre livre1 : result) {
+                System.out.printf("| %-10s | %-20s | %-15s |\n",
+                        livre1.getISBN(),
+                        livre1.getTitre(),
+                        livre1.getAuteur());
+            }
+        } else {
+            System.out.printf("| %-51s |\n", "il n'y a pas de livre avec cette titre");
+        }
+        System.out.println("-------------------------------------------------------");
     }
 
     public void modifierLivre() {
@@ -67,12 +95,14 @@ public class LivreController {
             }
         }
     }
-    public void supprimerLivre(){
+
+    public void supprimerLivre() {
         System.out.println("Entrer ISBN de livre: ");
         isbn = scanner.next();
         livreDao.supprimerLivre(isbn);
     }
-    public void chercherLivre(){
+
+    public void chercherLivre() {
         System.out.println("Entrer Titre ou Auteur de livre: ");
         titre = scanner.next();
         List<Livre> result = livreDao.chercherLivre(titre);
@@ -80,7 +110,7 @@ public class LivreController {
         System.out.printf("| %-10s | %-20s | %-15s |\n", "ISBN", "Titre", "Auteur");
         System.out.println("-------------------------------------------------------");
         if (!result.isEmpty()) {
-            for (Livre livre1 : result){
+            for (Livre livre1 : result) {
                 System.out.printf("| %-10s | %-20s | %-15s |\n",
                         livre1.getISBN(),
                         livre1.getTitre(),

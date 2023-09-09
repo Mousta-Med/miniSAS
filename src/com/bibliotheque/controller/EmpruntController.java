@@ -21,6 +21,8 @@ public class EmpruntController {
     LivreDao livreDao = new LivreDaoImpl();
     MemberDao memberDao = new MemberDaoImpl();
     Emprunt emprunt = new Emprunt();
+    Date date = new Date(System.currentTimeMillis());
+    Integer némuro;
 
     public void ajouterEmprunt() {
         System.out.println("L'Empranteur est:");
@@ -30,66 +32,69 @@ public class EmpruntController {
             Integer role = scanner.nextInt();
             scanner.nextLine();
             if (role == 1) {
-                Date date = new Date(System.currentTimeMillis());
                 System.out.println("Entrer Némuro De Member:");
-                Integer némuro = scanner.nextInt();
-                System.out.println("Entrer ISBN De Livre:");
-                String Isbn = scanner.next();
-                System.out.println("Entrer La Durée D'emprunt");
-                Integer duree = scanner.nextInt();
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                calendar.add(Calendar.DAY_OF_YEAR, duree);
-                Date date1 = new Date(calendar.getTimeInMillis());
-                Membre membre = memberDao.chercherMember(némuro);
-                Livre livre = livreDao.afficherLivreparISBN(Isbn);
-                if (livre.getStatut() == Livre.Statut.DISPONIBLE){
-                    if (membre != null && livre != null) {
-                        emprunt.setDate_fin_demprunt(date1);
-                        emprunt.setDate_demprunt(date);
-                        emprunt.setLivre(livre);
-                        emprunt.setMembre(membre);
-                        empruntDao.ajouterEmprunt(emprunt);
-                        System.out.println("le Livre A été Emprunter");
-                    } else {
-                        System.out.println("ISBN OU Némuro DE MEMBER EST Invalid");
-                    }
-                }else {
-                    System.out.println("wait till the book returned");
-                }
-
+                némuro = scanner.nextInt();
+                this.fun();
             } else if (role == 2) {
-                Date date = new Date(System.currentTimeMillis());
-                Integer némuro = memberController.ajouterMember();
-                System.out.println("Entrer ISBN De Livre:");
-                String Isbn = scanner.next();
-                System.out.println("Entrer La Durée D'emprunt");
-                Integer duree = scanner.nextInt();
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                calendar.add(Calendar.DAY_OF_YEAR, duree);
-                Date date1 = new Date(calendar.getTimeInMillis());
-                Membre membre = memberDao.chercherMember(némuro);
-                Livre livre = livreDao.afficherLivreparISBN(Isbn);
-                if (livre.getStatut() == Livre.Statut.DISPONIBLE){
-                    if (membre != null && livre != null) {
-                        emprunt.setDate_fin_demprunt(date1);
-                        emprunt.setDate_demprunt(date);
-                        emprunt.setLivre(livre);
-                        emprunt.setMembre(membre);
-                        empruntDao.ajouterEmprunt(emprunt);
-                        System.out.println("le Livre A été Emprunter");
-                    } else {
-                        System.out.println("ISBN OU Némuro DE MEMBER EST Invalid");
-                    }
-                }else {
-                    System.out.println("Le livre a été déja emprunter");
-                }
+                némuro = memberController.ajouterMember();
+                this.fun();
             } else {
                 System.out.println("Invalid Choix !!!");
             }
-        }else {
+        } else {
             System.out.println("Invalid Choix !!!");
         }
     }
+
+    public void fun() {
+        System.out.println("Entrer ISBN De Livre:");
+        String Isbn = scanner.next();
+        System.out.println("Entrer La Durée D'emprunt");
+        Integer duree = scanner.nextInt();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, duree);
+        Date date1 = new Date(calendar.getTimeInMillis());
+        Membre membre = memberDao.chercherMember(némuro);
+        Livre livre = livreDao.afficherLivreparISBN(Isbn);
+        if (livre.getStatut() == Livre.Statut.DISPONIBLE) {
+            if (membre != null && livre != null) {
+                emprunt.setDate_fin_demprunt(date1);
+                emprunt.setDate_demprunt(date);
+                emprunt.setLivre(livre);
+                emprunt.setMembre(membre);
+                empruntDao.ajouterEmprunt(emprunt);
+                System.out.println("le Livre A été Emprunter");
+            } else {
+                System.out.println("ISBN OU Némuro DE MEMBER EST Invalid");
+            }
+        } else {
+            System.out.println("wait till the book returned");
+        }
+    }
 }
+
+// System.out.println("Entrer ISBN De Livre:");
+// String Isbn = scanner.next();
+// System.out.println("Entrer La Durée D'emprunt");
+// Integer duree = scanner.nextInt();
+// Calendar calendar = Calendar.getInstance();
+// calendar.setTime(date);
+// calendar.add(Calendar.DAY_OF_YEAR, duree);
+// Date date1 = new Date(calendar.getTimeInMillis());
+// Membre membre = memberDao.chercherMember(némuro);
+// Livre livre = livreDao.afficherLivreparISBN(Isbn);
+// if (livre.getStatut() == Livre.Statut.DISPONIBLE){
+// if (membre != null && livre != null) {
+// emprunt.setDate_fin_demprunt(date1);
+// emprunt.setDate_demprunt(date);
+// emprunt.setLivre(livre);
+// emprunt.setMembre(membre);
+// empruntDao.ajouterEmprunt(emprunt);
+// System.out.println("le Livre A été Emprunter");
+// } else {
+// System.out.println("ISBN OU Némuro DE MEMBER EST Invalid");
+// }
+// }else {
+// System.out.println("Le livre a été déja emprunter");
+// }
