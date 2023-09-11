@@ -19,4 +19,6 @@ public interface LivreDao {
 
     public Livre modifierLivre(Livre livre);
 
+    public void updatePérduLivre();
+
 }

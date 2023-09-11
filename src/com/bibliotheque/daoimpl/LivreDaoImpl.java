@@ -86,6 +86,7 @@ public class LivreDaoImpl implements LivreDao {
                 livre.setISBN(resultSet.getString("isbn"));
                 livre.setTitre(resultSet.getString("titre"));
                 livre.setAuteur(resultSet.getString("auteur"));
+                livre.setStatut(Livre.Statut.valueOf(resultSet.getString("statut")));
                 return livre;
             }
         } catch (SQLException e) {
@@ -153,4 +154,18 @@ public class LivreDaoImpl implements LivreDao {
         }
         return null;
     }
+
+    @Override
+    public void updatePérduLivre() {
+        String query = "SELECT update_perdu_livre()";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.executeQuery();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

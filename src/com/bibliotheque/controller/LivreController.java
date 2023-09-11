@@ -54,7 +54,7 @@ public class LivreController {
                         livre1.getAuteur());
             }
         } else {
-            System.out.printf("| %-51s |\n", "il n'y a pas de livre avec cette titre");
+            System.out.printf("| %-51s |\n", "il n'y a pas de livre");
         }
         System.out.println("-------------------------------------------------------");
     }
@@ -120,5 +120,9 @@ public class LivreController {
             System.out.printf("| %-51s |\n", "il n'y a pas de livre avec cette titre");
         }
         System.out.println("-------------------------------------------------------");
+    }
+
+    public void updateperdulivre() {
+        livreDao.updatePérduLivre();
     }
 }

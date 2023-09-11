@@ -22,6 +22,7 @@ public class Main {
         String isbn;
         Livre livre = new Livre();
         LivreDao livreDao = new LivreDaoImpl();
+        livreController.updateperdulivre();
         do {
             System.out.println(
                     """
@@ -72,11 +73,15 @@ public class Main {
                     empruntController.ajouterEmprunt();
                     break;
                 case 10:
+                    memberController.afficherMembers();
                     break;
                 case 11:
                     livreController.afficherLivre(11);
                     break;
                 case 12:
+                    empruntController.retournerEmprunt();
+                    break;
+                case 13:
                     break;
                 case 0:
                     System.out.println("Merci...");

@@ -2,8 +2,10 @@ package com.bibliotheque.controller;
 
 import com.bibliotheque.dao.MemberDao;
 import com.bibliotheque.daoimpl.MemberDaoImpl;
+import com.bibliotheque.entity.Livre;
 import com.bibliotheque.entity.Membre;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MemberController {
@@ -89,5 +91,25 @@ public class MemberController {
                 System.out.println("Member A été Bien Supprimer");
             }
         }
+    }
+
+    public void afficherMembers() {
+        List<Membre> result;
+        result = memberDao.afficherMembers();
+        System.out.println("--------------------------------------------------------------------");
+        System.out.printf("| %-10s | %-20s | %-15s | %-10s |\n", "Némuro", "Nom", "Tele", "Cin");
+        System.out.println("--------------------------------------------------------------------");
+        if (!result.isEmpty()) {
+            for (Membre membre1 : result) {
+                System.out.printf("| %-10s | %-20s | %-15s | %-10s |\n",
+                        membre1.getMemberNémuro(),
+                        membre1.getMemberNom(),
+                        membre1.getMemberTelephon(),
+                        membre1.getMemberCin());
+            }
+        } else {
+            System.out.printf("| %-51s |\n", "il n'y a pas de Member Ajouter");
+        }
+        System.out.println("--------------------------------------------------------------------");
     }
 }

@@ -6,6 +6,8 @@ import com.bibliotheque.entity.Membre;
 import com.bibliotheque.util.DbConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MemberDaoImpl implements MemberDao {
@@ -39,6 +41,29 @@ public class MemberDaoImpl implements MemberDao {
             Integer result = preparedStatement.executeUpdate();
             preparedStatement.close();
             return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Membre> afficherMembers() {
+        String query = "SELECT * FROM Member ";
+        List<Membre> membres = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                Membre membre = new Membre();
+                membre.setMemberNémuro(resultSet.getInt("membernémuro"));
+                membre.setMemberNom(resultSet.getString("membernom"));
+                membre.setMemberTelephon(resultSet.getInt("membertelephone"));
+                membre.setMemberCin(resultSet.getString("membercin"));
+                membres.add(membre);
+            }
+            return membres;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

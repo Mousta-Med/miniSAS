@@ -69,7 +69,19 @@ public class EmpruntController {
                 System.out.println("ISBN OU Némuro DE MEMBER EST Invalid");
             }
         } else {
-            System.out.println("wait till the book returned");
+            System.out.println("Le livre Déja Emprunter");
+        }
+    }
+
+    public void retournerEmprunt() {
+        System.out.println("Entrer ISBN de livre");
+        String isbn = scanner.nextLine();
+        Boolean result = empruntDao.supprimerEmprunt(isbn);
+        if (result == true) {
+            System.out.println("le Livre A été Retourner");
+        } else {
+            System.out.println("le Livre Ne Pas Retourner");
+
         }
     }
 }

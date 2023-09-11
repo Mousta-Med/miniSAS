@@ -29,7 +29,18 @@ public class EmpruntDaoImpl implements EmpruntDao {
     }
 
     @Override
-    public Boolean supprimerEmprunt() {
+    public Boolean supprimerEmprunt(String isbn) {
+        String query = "DELETE FROM Emprunt WHERE livreisbn = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, isbn);
+            Integer result = preparedStatement.executeUpdate();
+            preparedStatement.close();
+            if (result != 0)
+                return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }
