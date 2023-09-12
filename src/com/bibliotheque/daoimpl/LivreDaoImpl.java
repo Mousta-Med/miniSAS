@@ -4,12 +4,17 @@ import com.bibliotheque.dao.LivreDao;
 import com.bibliotheque.entity.Livre;
 import com.bibliotheque.util.DbConnection;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.ResultSet;
 
 public class LivreDaoImpl implements LivreDao {
     Connection connection = DbConnection.createDbConnection();
+
 
     @Override
     public Livre ajouterLivre(Livre livre) {
@@ -138,13 +143,12 @@ public class LivreDaoImpl implements LivreDao {
 
     @Override
     public Livre modifierLivre(Livre livre) {
-        String query = "UPDATE Livre SET titre = ?, auteur = ?, statut = ? WHERE isbn = ?";
+        String query = "UPDATE Livre SET titre = ?, auteur = ? WHERE isbn = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, livre.getTitre());
             preparedStatement.setString(2, livre.getAuteur());
-            preparedStatement.setObject(3, livre.getStatut(), Types.OTHER);
-            preparedStatement.setString(4, livre.getISBN());
+            preparedStatement.setString(3, livre.getISBN());
             Integer result = preparedStatement.executeUpdate();
             preparedStatement.close();
             if (result != 0)
@@ -163,6 +167,42 @@ public class LivreDaoImpl implements LivreDao {
             preparedStatement.executeQuery();
             preparedStatement.close();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public ResultSet livreStatistique() {
+        String query = "SELECT livre.statut , count(*) from livre group by statut;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public void createFile(ResultSet stats) {
+        try {
+            File file = new File("C:\\Users\\adm\\Onedrive\\Desktop\\report.txt");
+            file.getParentFile().mkdirs();
+            FileWriter writer = new FileWriter(file);
+            if (stats != null) {
+                writer.write("Bibliotheque Rapport:\n");
+                while (stats.next()) {
+                    writer.write(stats.getString("statut") + ":" + stats.getInt("count") + "\n");
+                }
+                writer.close();
+                System.out.println("Fichier bien créé");
+            } else {
+                System.out.println("ResultSet is null");
+            }
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }

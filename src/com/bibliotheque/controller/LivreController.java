@@ -4,6 +4,8 @@ import com.bibliotheque.dao.LivreDao;
 import com.bibliotheque.daoimpl.LivreDaoImpl;
 import com.bibliotheque.entity.Livre;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,7 +30,6 @@ public class LivreController {
         livre.setTitre(titre);
         livre.setAuteur(auteur);
         livre.setStatut(Livre.Statut.DISPONIBLE);
-        ;
         if (livreDao.ajouterLivre(livre) != null) {
             System.out.println("Livre A été Bien Ajouter");
         } else {
@@ -71,28 +72,11 @@ public class LivreController {
             titre = scanner.nextLine();
             System.out.println("Entrer Auteur De Livre:");
             auteur = scanner.nextLine();
-            System.out.println(
-                    """
-                            Choisir Le nouveau Statut:
-                            1.DISPONIBLE
-                            2.EMPRUNTER
-                            3.PÉRDU""");
-            int choix = scanner.nextInt();
             livre.setISBN(isbn);
             livre.setTitre(titre);
             livre.setAuteur(auteur);
-            if (choix == 1) {
-                livre.setStatut(Livre.Statut.DISPONIBLE);
-                livreDao.modifierLivre(livre);
-            } else if (choix == 2) {
-                livre.setStatut(Livre.Statut.EMPRUNTER);
-                livreDao.modifierLivre(livre);
-            } else if (choix == 3) {
-                livre.setStatut(Livre.Statut.PÉRDU);
-                livreDao.modifierLivre(livre);
-            } else {
-                System.out.println("Votre Choix Est Invalide");
-            }
+            livreDao.modifierLivre(livre);
+            System.out.println("Livre a été bien modifier:");
         }
     }
 
@@ -120,6 +104,24 @@ public class LivreController {
             System.out.printf("| %-51s |\n", "il n'y a pas de livre avec cette titre");
         }
         System.out.println("-------------------------------------------------------");
+    }
+
+    public void getStats() throws SQLException {
+        ResultSet resultSet = livreDao.livreStatistique();
+        System.out.println("---------------------------");
+        System.out.printf("| %-10s | %-10s |\n", "Stats", "Count");
+        System.out.println("---------------------------");
+        while (resultSet.next()) {
+            System.out.printf("| %-10s | %-10s |\n",
+                    resultSet.getString("statut"),
+                    resultSet.getInt("count"));
+        }
+        System.out.println("---------------------------");
+    }
+
+    public void exportstats() {
+        ResultSet resultSet = livreDao.livreStatistique();
+        livreDao.createFile(resultSet);
     }
 
     public void updateperdulivre() {

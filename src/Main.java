@@ -19,9 +19,6 @@ public class Main {
         LivreController livreController = new LivreController();
         EmpruntController empruntController = new EmpruntController();
         Scanner scanner = new Scanner(System.in);
-        String isbn;
-        Livre livre = new Livre();
-        LivreDao livreDao = new LivreDaoImpl();
         livreController.updateperdulivre();
         do {
             System.out.println(
@@ -40,6 +37,7 @@ public class Main {
                             + 11.Afficher Les Livres Emprunter                    +
                             + 12.Retourner Un Livre Emprunter                     +
                             + 13.Aficher Statistique                              +
+                            + 14.Exporter Statistique                             +
                             + 0.Sortir                                            +
                             +++++++++++++++++++++++++++++++++++++++++++++++++++++++
                             Entrer Votre Choix:\s""");
@@ -82,6 +80,10 @@ public class Main {
                     empruntController.retournerEmprunt();
                     break;
                 case 13:
+                    livreController.getStats();
+                    break;
+                case 14:
+                    livreController.exportstats();
                     break;
                 case 0:
                     System.out.println("Merci...");
