@@ -53,7 +53,7 @@ public class Main {
                     livreController.supprimerLivre();
                     break;
                 case 4:
-                    livreController.afficherLivre(4);
+                    livreController.afficherLivre();
                     break;
                 case 5:
                     livreController.chercherLivre();
@@ -74,7 +74,7 @@ public class Main {
                     memberController.afficherMembers();
                     break;
                 case 11:
-                    livreController.afficherLivre(11);
+                    livreController.afficherLivreEmprunter();
                     break;
                 case 12:
                     empruntController.retournerEmprunt();

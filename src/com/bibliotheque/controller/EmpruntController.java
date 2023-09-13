@@ -85,28 +85,3 @@ public class EmpruntController {
         }
     }
 }
-
-// System.out.println("Entrer ISBN De Livre:");
-// String Isbn = scanner.next();
-// System.out.println("Entrer La Durée D'emprunt");
-// Integer duree = scanner.nextInt();
-// Calendar calendar = Calendar.getInstance();
-// calendar.setTime(date);
-// calendar.add(Calendar.DAY_OF_YEAR, duree);
-// Date date1 = new Date(calendar.getTimeInMillis());
-// Membre membre = memberDao.chercherMember(némuro);
-// Livre livre = livreDao.afficherLivreparISBN(Isbn);
-// if (livre.getStatut() == Livre.Statut.DISPONIBLE){
-// if (membre != null && livre != null) {
-// emprunt.setDate_fin_demprunt(date1);
-// emprunt.setDate_demprunt(date);
-// emprunt.setLivre(livre);
-// emprunt.setMembre(membre);
-// empruntDao.ajouterEmprunt(emprunt);
-// System.out.println("le Livre A été Emprunter");
-// } else {
-// System.out.println("ISBN OU Némuro DE MEMBER EST Invalid");
-// }
-// }else {
-// System.out.println("Le livre a été déja emprunter");
-// }

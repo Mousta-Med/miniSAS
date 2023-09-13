@@ -1,7 +1,10 @@
 package com.bibliotheque.controller;
 
+import com.bibliotheque.dao.EmpruntDao;
 import com.bibliotheque.dao.LivreDao;
+import com.bibliotheque.daoimpl.EmpruntDaoImpl;
 import com.bibliotheque.daoimpl.LivreDaoImpl;
+import com.bibliotheque.entity.Emprunt;
 import com.bibliotheque.entity.Livre;
 
 import java.sql.ResultSet;
@@ -37,13 +40,9 @@ public class LivreController {
         }
     }
 
-    public void afficherLivre(Integer integer) {
+    public void afficherLivre() {
         List<Livre> result;
-        if (integer == 4) {
-            result = livreDao.afficherLivre();
-        } else {
-            result = livreDao.afficherLivreEmprunter();
-        }
+        result = livreDao.afficherLivre();
         System.out.println("-------------------------------------------------------");
         System.out.printf("| %-10s | %-20s | %-15s |\n", "ISBN", "Titre", "Auteur");
         System.out.println("-------------------------------------------------------");
@@ -59,6 +58,30 @@ public class LivreController {
         }
         System.out.println("-------------------------------------------------------");
     }
+
+    public void afficherLivreEmprunter() {
+        List<Livre> result;
+        result = livreDao.afficherLivreEmprunter();
+        System.out.println("------------------------------------------------------------------------------------------------");
+        System.out.printf("| %-10s | %-20s | %-15s | %-20s | %-15s |\n", "ISBN", "Titre", "Auteur", "Emprunteur", "Date D'emprunt");
+        System.out.println("------------------------------------------------------------------------------------------------");
+        if (!result.isEmpty()) {
+            for (Livre livre1 : result) {
+                EmpruntDao empruntDao = new EmpruntDaoImpl();
+                Emprunt emprunt = empruntDao.chercheEmprunt(livre1.getISBN());
+                System.out.printf("| %-10s | %-20s | %-15s | %-20s | %-15s |\n",
+                        emprunt.getLivre().getISBN(),
+                        emprunt.getLivre().getTitre(),
+                        emprunt.getLivre().getAuteur(),
+                        emprunt.getMembre().getMemberNom(),
+                        emprunt.getDate_demprunt());
+            }
+        } else {
+            System.out.printf("| %-92s |\n", "il n'y a pas de livre");
+        }
+        System.out.println("------------------------------------------------------------------------------------------------");
+    }
+
 
     public void modifierLivre() {
         System.out.println("Entrer ISBN De Livre:");
