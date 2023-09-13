@@ -104,7 +104,7 @@ public class MemberController {
                 System.out.printf("| %-10s | %-20s | %-15s | %-10s |\n",
                         membre1.getMemberNémuro(),
                         membre1.getMemberNom(),
-                        membre1.getMemberTelephon(),
+                        "0" + membre1.getMemberTelephon(),
                         membre1.getMemberCin());
             }
         } else {
